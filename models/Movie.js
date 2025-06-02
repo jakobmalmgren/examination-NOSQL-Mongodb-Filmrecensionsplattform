@@ -28,4 +28,39 @@ export const getAllMoviesFromDb = async () => {
   }
 };
 
+export const getMovieByIdFromDb = async (id) => {
+  try {
+    const movie = Movie.findById(id);
+    return movie;
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+};
+
+export const updateMovieByIdFromDb = async (id, updatedData) => {
+  try {
+    const updatedMovie = Movie.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+    return updatedMovie;
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+};
+
+export const deleteMovieByIdFromDb = async (id) => {
+  try {
+    const deletedMovie = await Movie.findByIdAndDelete(id);
+    console.log("DELETE", deletedMovie);
+
+    return deletedMovie;
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+};
+
 export default Movie;

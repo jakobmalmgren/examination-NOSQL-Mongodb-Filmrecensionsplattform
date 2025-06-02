@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import userRoutes from "./routes/userRoutes.js";
 import movieRoutes from "./routes/movieRoutes.js";
 
 const app = express();
@@ -21,6 +22,7 @@ const connectDb = async () => {
 connectDb();
 
 app.use("/api/movies", movieRoutes);
+app.use("/api/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`servern är igång på http://localhost:${PORT}`);
