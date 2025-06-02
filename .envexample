@@ -1,0 +1,2 @@
+PORT=your port
+MONGODB_URI=mongodb+srv://<db_username_when_logging_in>:<db_password>@cluster0.hgmfdiu.mongodb.net/<db_name>?retryWrites=true&w=majority&appName=<db_clusterName>
