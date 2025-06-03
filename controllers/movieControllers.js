@@ -5,6 +5,8 @@ import {
   insertMovieDb,
   updateMovieByIdFromDb,
 } from "../models/Movie.js";
+import mongoose from "mongoose";
+import { getAllReviewsFromMovieFromDb } from "../models/Review.js";
 
 export const postMovie = async (req, res) => {
   const movieData = req.body;
@@ -51,6 +53,13 @@ export const getMovieByID = async (req, res) => {
     });
   }
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      success: false,
+    });
+  }
+
   try {
     const movie = await getMovieByIdFromDb(id);
     if (movie === null) {
@@ -81,9 +90,23 @@ export const updateMovieByID = async (req, res) => {
     });
   }
 
-  const updatedData = req.body;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      success: false,
+    });
+  }
+  const { title, director, releaseYear, genre } = req.body;
+
+  if (!title || !director || !releaseYear || !genre) {
+    return res.status(404).json({
+      message: "title, director, releaseYear och genre måste ingå i bodyn",
+      success: false,
+    });
+  }
+
   try {
-    const updatedMovie = await updateMovieByIdFromDb(id, updatedData);
+    const updatedMovie = await updateMovieByIdFromDb(id, req.body);
     if (updatedMovie === null) {
       return res.status(404).json({
         message: "ID:t finns inte",
@@ -112,6 +135,13 @@ export const deleteMovieByID = async (req, res) => {
     });
   }
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      success: false,
+    });
+  }
+
   try {
     const deletedMovie = await deleteMovieByIdFromDb(id);
     if (deletedMovie === null) {
@@ -128,6 +158,45 @@ export const deleteMovieByID = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "du lyckades INTE deleta filmen med specifikt ID",
+      success: false,
+      errorMessage: error.message,
+    });
+  }
+};
+
+export const getAllReviewsFromMovie = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({
+      message: "ID i URL params är required",
+    });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      success: false,
+    });
+  }
+
+  try {
+    const allReviewsFromMovie = await getAllReviewsFromMovieFromDb(id);
+
+    if (allReviewsFromMovie.length === 0) {
+      return res.status(404).json({
+        message: "ID:t finns inte eller har filmen inga reviews",
+      });
+    }
+
+    return res.status(200).json({
+      message: "hämtningen av reviews för specifik film lyckades",
+      success: true,
+      Data: allReviewsFromMovie,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "hämtningen av reviews för specifik film lyckades INTE",
       success: false,
       errorMessage: error.message,
     });

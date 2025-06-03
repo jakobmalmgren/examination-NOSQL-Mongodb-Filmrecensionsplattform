@@ -35,4 +35,16 @@ export const findEmailInDb = async (email) => {
   }
 };
 
+export const findUsernameInDb = async (username) => {
+  try {
+    const foundUser = await User.findOne({ username: username });
+    console.log("FOUNDUSER:", foundUser);
+
+    return foundUser;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export default User;
