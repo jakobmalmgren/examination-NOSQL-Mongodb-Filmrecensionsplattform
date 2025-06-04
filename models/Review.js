@@ -22,8 +22,22 @@ const Review = mongoose.model("Review", reviewSchema);
 
 export const insertReviewToDb = async (review) => {
   try {
+    // varför inte göra som ja gjorde i Review
+
+    // export const getAllReviewsFromMovieFromDb = async (id) => {
+    //   try {
+    //     const allReviewsFromMovie = await Review.find({ movieId: id })
+    //       .populate("movieId", "title -_id")
+    //       .populate("userId", "username -_id");
+    //kolla!!!!!!!!!!!!!!
+
     const insertedReview = await Review.create(review);
-    return insertedReview;
+    const populatedReview = await Review.findById(insertedReview._id)
+      .select("-_id -__v")
+      .populate("movieId", "-__v -_id")
+      .populate("userId", "-_id -password -__v");
+
+    return populatedReview;
   } catch (error) {
     console.error(error);
     throw error;
@@ -42,7 +56,10 @@ export const getReviewInDb = async () => {
 
 export const findReviewInDbById = async (id) => {
   try {
-    const reviews = await Review.findById(id);
+    const reviews = await Review.findById(id)
+      .select("-_id -__v")
+      .populate("movieId", "-__v -_id")
+      .populate("userId", "-_id -password -__v");
     console.log("REW", reviews);
 
     return reviews;
@@ -54,7 +71,10 @@ export const findReviewInDbById = async (id) => {
 
 export const deleteReviewInDbById = async (id) => {
   try {
-    const deletedReviews = await Review.findByIdAndDelete(id);
+    const deletedReviews = await Review.findByIdAndDelete(id)
+      .select("-_id -__v")
+      .populate("movieId", "-__v -_id")
+      .populate("userId", "-_id -password -__v");
     console.log("REW-deleted", deletedReviews);
 
     return deletedReviews;
@@ -69,7 +89,10 @@ export const updateReviewInDbById = async (id, updatedData) => {
     const updatedReview = await Review.findByIdAndUpdate(id, updatedData, {
       new: true,
       runValidators: true,
-    });
+    })
+      .select("-_id -__v")
+      .populate("movieId", "-__v -_id")
+      .populate("userId", "-_id -password -__v");
     console.log("REW-updated", updatedReview);
 
     return updatedReview;
@@ -94,4 +117,41 @@ export const getAllReviewsFromMovieFromDb = async (id) => {
     throw error;
   }
 };
+
+// export const aggregateAllMovieRatingsFromDb = async () => {
+//   try {
+//     return await Review.aggregate([
+//       {
+//         $group: {
+//           _id: "$movieId",
+//           avgRating: { $avg: "$ratings" },
+//           reviewCount: { $sum: 1 },
+//         },
+//       },
+//       {
+//         $lookup: {
+//           from: "movies", // inte Movies?
+//           localField: "_id", // va gör de?
+//           foreignField: "_id", // va gör de?
+//           as: "movieData", // va gör de?
+//         },
+//       },
+//       { $unwind: "$movieData" },
+//       {
+//         $project: {
+//           _id: 0,
+//           title: "$movieData.title",
+//           genre: "$movieData.genre",
+//           avgRating: { $round: ["$avgRating", 1] },
+//           reviewCount: 1,
+//         },
+//       },
+//       { $sort: { avgRating: -1 } },
+//     ]);
+//   } catch (error) {
+//     console.log(error.message);
+//     throw error;
+//   }
+// };
+
 export default Review;

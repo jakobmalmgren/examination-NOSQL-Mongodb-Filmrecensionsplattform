@@ -6,13 +6,14 @@ import {
   deleteReviewsById,
   updateReviewById,
 } from "../controllers/reviewControllers.js";
+import { checkAuthorization } from "../middlewares/checkAuthorization.js";
 
 const router = express.Router();
 
-router.post("/", postReview); // kan göra populate här me här me??????
-router.get("/", getReviews); // kan göra populate här me
-router.get("/:id", getReviewsById); // kan göra populate här me
-router.put("/:id", updateReviewById); // kan göra populate här me
-router.delete("/:id", deleteReviewsById); // kan göra populate här me
+router.post("/", postReview);
+router.get("/", getReviews);
+router.get("/:id", getReviewsById);
+router.put("/:id", checkAuthorization, updateReviewById);
+router.delete("/:id", checkAuthorization, deleteReviewsById);
 
 export default router;

@@ -63,4 +63,38 @@ export const deleteMovieByIdFromDb = async (id) => {
   }
 };
 
+export const aggregateAllMovieRatingsFromDb = async () => {
+  try {
+    return await Movie.aggregate([
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id", // varje filmens _id
+          foreignField: "movieId", // matcha mot reviews.movieId
+          as: "reviews",
+        },
+      },
+      {
+        $addFields: {
+          avgRating: { $avg: "$reviews.ratings" },
+          reviewCount: { $size: "$reviews" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          title: 1,
+          genre: 1,
+          avgRating: { $round: ["$avgRating", 1] },
+          reviewCount: 1,
+        },
+      },
+      { $sort: { avgRating: -1 } },
+    ]);
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+};
+
 export default Movie;

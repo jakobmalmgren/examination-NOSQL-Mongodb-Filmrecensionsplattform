@@ -1,4 +1,5 @@
 import {
+  aggregateAllMovieRatingsFromDb,
   deleteMovieByIdFromDb,
   getAllMoviesFromDb,
   getMovieByIdFromDb,
@@ -197,6 +198,32 @@ export const getAllReviewsFromMovie = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "hämtningen av reviews för specifik film lyckades INTE",
+      success: false,
+      errorMessage: error.message,
+    });
+  }
+};
+//
+export const getAllMoviesAndRatings = async (req, res) => {
+  try {
+    const aggregatedData = await aggregateAllMovieRatingsFromDb();
+
+    if (aggregatedData.length === 0) {
+      return res.status(404).json({
+        message: "det finns inga recensioner att ta del av!",
+      });
+    }
+
+    return res.status(200).json({
+      message:
+        "hämtningen av alla filmer och deras genomsnittliga betyg lyckades!",
+      success: true,
+      Data: aggregatedData,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message:
+        "hämtningen av alla filmer och deras genomsnittliga betyg lyckades INTE",
       success: false,
       errorMessage: error.message,
     });
