@@ -1,3 +1,5 @@
+// check authorization middleware
+
 export const checkAuthorization = (req, res, next) => {
   try {
     if (req.role !== "admin") {

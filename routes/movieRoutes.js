@@ -11,6 +11,8 @@ import {
 import { checkAuthorization } from "../middlewares/checkAuthorization.js";
 const router = express.Router();
 
+//movies routes
+
 router.post("/", checkAuthorization, postMovie);
 router.get("/", getAllMovies);
 // stjärnuppg-

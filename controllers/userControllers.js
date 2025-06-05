@@ -3,12 +3,12 @@ import { findEmailInDb, insertUserToDb } from "../models/User.js";
 import { findUsernameInDb } from "./../models/User.js";
 import jwt from "jsonwebtoken";
 
+//create a user
 export const createUser = async (req, res) => {
   const { username, email, password, role } = req.body;
 
   try {
-    // behövs igentligen inte för de checkhas ju redan me mongoose
-    //men har den för nu
+    // doesnt really need this because its a check in mongoose, but i will have it for now
     const foundUser = await findEmailInDb(email);
     if (foundUser !== null) {
       return res.status(400).json({
@@ -49,6 +49,7 @@ export const createUser = async (req, res) => {
   }
 };
 
+//login user
 export const logInUser = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
@@ -57,8 +58,8 @@ export const logInUser = async (req, res) => {
       success: false,
     });
   }
-  // de är fel användarnamn!, men skriver "fel användarnamn eller lösenord"
-  // för att inte ge för mycke info till front
+  // its acctually wrong !username! but i give back info as "wrong username or password", because
+  // i dont want to give to much info to the client
   try {
     const foundUsername = await findUsernameInDb(username);
 
@@ -72,8 +73,8 @@ export const logInUser = async (req, res) => {
       password,
       foundUsername.password
     );
-    // de är fel lösenord!, men skriver "fel användarnamn eller lösenord"
-    // för att inte ge för mycke info till front
+    // its acctually wrong !password! but i give back info as "wrong username or password", because
+    // i dont want to give to much info to the client
     if (!checkIfPasswordMatch) {
       return res.status(401).json({
         message: "fel användarnamn eller lösenord",

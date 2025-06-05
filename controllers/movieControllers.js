@@ -9,6 +9,8 @@ import {
 import mongoose from "mongoose";
 import { getAllReviewsFromMovieFromDb } from "../models/Review.js";
 
+// create a movie
+
 export const postMovie = async (req, res) => {
   const movieData = req.body;
 
@@ -28,6 +30,8 @@ export const postMovie = async (req, res) => {
   }
 };
 
+//get all movies
+
 export const getAllMovies = async (req, res) => {
   try {
     const allMovies = await getAllMoviesFromDb();
@@ -45,6 +49,7 @@ export const getAllMovies = async (req, res) => {
   }
 };
 
+//get a movie by its ID
 export const getMovieByID = async (req, res) => {
   const { id } = req.params;
 
@@ -82,6 +87,7 @@ export const getMovieByID = async (req, res) => {
   }
 };
 
+//update a movie by its ID
 export const updateMovieByID = async (req, res) => {
   const { id } = req.params;
 
@@ -127,6 +133,7 @@ export const updateMovieByID = async (req, res) => {
   }
 };
 
+// delete av movie by its ID
 export const deleteMovieByID = async (req, res) => {
   const { id } = req.params;
 
@@ -165,6 +172,7 @@ export const deleteMovieByID = async (req, res) => {
   }
 };
 
+// get all reviews from a movie
 export const getAllReviewsFromMovie = async (req, res) => {
   const { id } = req.params;
 
@@ -203,7 +211,7 @@ export const getAllReviewsFromMovie = async (req, res) => {
     });
   }
 };
-//
+//get all movies & ratings
 export const getAllMoviesAndRatings = async (req, res) => {
   try {
     const aggregatedData = await aggregateAllMovieRatingsFromDb();

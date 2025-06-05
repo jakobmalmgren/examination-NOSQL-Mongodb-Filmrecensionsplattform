@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+//Review model that includes the scheme and functions connected to it
+
 const reviewSchema = new mongoose.Schema(
   {
     movieId: {
@@ -20,17 +22,10 @@ const reviewSchema = new mongoose.Schema(
 
 const Review = mongoose.model("Review", reviewSchema);
 
+// insert review func
+
 export const insertReviewToDb = async (review) => {
   try {
-    // varför inte göra som ja gjorde i Review
-
-    // export const getAllReviewsFromMovieFromDb = async (id) => {
-    //   try {
-    //     const allReviewsFromMovie = await Review.find({ movieId: id })
-    //       .populate("movieId", "title -_id")
-    //       .populate("userId", "username -_id");
-    //kolla!!!!!!!!!!!!!!
-
     const insertedReview = await Review.create(review);
     const populatedReview = await Review.findById(insertedReview._id)
       .select("-_id -__v")
@@ -44,6 +39,7 @@ export const insertReviewToDb = async (review) => {
   }
 };
 
+// get review func
 export const getReviewInDb = async () => {
   try {
     const reviews = await Review.find();
@@ -54,6 +50,7 @@ export const getReviewInDb = async () => {
   }
 };
 
+//find review by id func
 export const findReviewInDbById = async (id) => {
   try {
     const reviews = await Review.findById(id)
@@ -69,6 +66,7 @@ export const findReviewInDbById = async (id) => {
   }
 };
 
+//delete review by id func
 export const deleteReviewInDbById = async (id) => {
   try {
     const deletedReviews = await Review.findByIdAndDelete(id)
@@ -84,6 +82,7 @@ export const deleteReviewInDbById = async (id) => {
   }
 };
 
+//update review by id func
 export const updateReviewInDbById = async (id, updatedData) => {
   try {
     const updatedReview = await Review.findByIdAndUpdate(id, updatedData, {
@@ -102,7 +101,7 @@ export const updateReviewInDbById = async (id, updatedData) => {
   }
 };
 
-// kolla upp de lite mer...hur de är struktuerat..
+//get all reviews func
 export const getAllReviewsFromMovieFromDb = async (id) => {
   try {
     const allReviewsFromMovie = await Review.find({ movieId: id })
@@ -117,41 +116,5 @@ export const getAllReviewsFromMovieFromDb = async (id) => {
     throw error;
   }
 };
-
-// export const aggregateAllMovieRatingsFromDb = async () => {
-//   try {
-//     return await Review.aggregate([
-//       {
-//         $group: {
-//           _id: "$movieId",
-//           avgRating: { $avg: "$ratings" },
-//           reviewCount: { $sum: 1 },
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "movies", // inte Movies?
-//           localField: "_id", // va gör de?
-//           foreignField: "_id", // va gör de?
-//           as: "movieData", // va gör de?
-//         },
-//       },
-//       { $unwind: "$movieData" },
-//       {
-//         $project: {
-//           _id: 0,
-//           title: "$movieData.title",
-//           genre: "$movieData.genre",
-//           avgRating: { $round: ["$avgRating", 1] },
-//           reviewCount: 1,
-//         },
-//       },
-//       { $sort: { avgRating: -1 } },
-//     ]);
-//   } catch (error) {
-//     console.log(error.message);
-//     throw error;
-//   }
-// };
 
 export default Review;

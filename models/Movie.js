@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+//Movie model that includes the scheme and functions connected to it
+
 const movieSchema = new mongoose.Schema({
   title: { type: String, required: true },
   director: { type: String, required: true },
@@ -8,6 +10,8 @@ const movieSchema = new mongoose.Schema({
 });
 
 const Movie = mongoose.model("Movie", movieSchema);
+
+// insert movie func
 
 export const insertMovieDb = async (movieData) => {
   try {
@@ -18,6 +22,8 @@ export const insertMovieDb = async (movieData) => {
     throw error;
   }
 };
+
+//get all movies func
 export const getAllMoviesFromDb = async () => {
   try {
     const allMovies = Movie.find({});
@@ -28,6 +34,7 @@ export const getAllMoviesFromDb = async () => {
   }
 };
 
+// get movie by id func
 export const getMovieByIdFromDb = async (id) => {
   try {
     const movie = Movie.findById(id);
@@ -38,6 +45,7 @@ export const getMovieByIdFromDb = async (id) => {
   }
 };
 
+//update movie by id func
 export const updateMovieByIdFromDb = async (id, updatedData) => {
   try {
     const updatedMovie = Movie.findByIdAndUpdate(id, updatedData, {
@@ -51,6 +59,7 @@ export const updateMovieByIdFromDb = async (id, updatedData) => {
   }
 };
 
+//delete movie by id func
 export const deleteMovieByIdFromDb = async (id) => {
   try {
     const deletedMovie = await Movie.findByIdAndDelete(id);
@@ -63,14 +72,15 @@ export const deleteMovieByIdFromDb = async (id) => {
   }
 };
 
+// aggregate all movie ratings func
 export const aggregateAllMovieRatingsFromDb = async () => {
   try {
     return await Movie.aggregate([
       {
         $lookup: {
           from: "reviews",
-          localField: "_id", // varje filmens _id
-          foreignField: "movieId", // matcha mot reviews.movieId
+          localField: "_id",
+          foreignField: "movieId",
           as: "reviews",
         },
       },

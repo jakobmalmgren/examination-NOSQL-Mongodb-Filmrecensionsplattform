@@ -10,6 +10,8 @@ import { checkAuthorization } from "../middlewares/checkAuthorization.js";
 
 const router = express.Router();
 
+//reviews routes
+
 router.post("/", postReview);
 router.get("/", getReviews);
 router.get("/:id", getReviewsById);

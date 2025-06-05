@@ -6,9 +6,11 @@ import {
   updateReviewInDbById,
 } from "../models/Review.js";
 import mongoose from "mongoose";
+
+//post a review
 export const postReview = async (req, res) => {
   try {
-    // den här checken behövs egentligen inte men gör de ändå för API design
+    // this check is not neccesary but I do it for better API design
     if (
       !req.body.movieId ||
       !req.body.userId ||
@@ -36,6 +38,7 @@ export const postReview = async (req, res) => {
   }
 };
 
+//get reviews
 export const getReviews = async (req, res) => {
   try {
     const reviews = await getReviewInDb();
@@ -53,6 +56,7 @@ export const getReviews = async (req, res) => {
   }
 };
 
+//get review by ID
 export const getReviewsById = async (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -92,6 +96,7 @@ export const getReviewsById = async (req, res) => {
   }
 };
 
+// delete review by ID
 export const deleteReviewsById = async (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -131,6 +136,7 @@ export const deleteReviewsById = async (req, res) => {
   }
 };
 
+//update review by ID
 export const updateReviewById = async (req, res) => {
   const { id } = req.params;
   const { ratings, comment } = req.body;
