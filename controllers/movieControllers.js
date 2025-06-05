@@ -12,7 +12,22 @@ import { getAllReviewsFromMovieFromDb } from "../models/Review.js";
 // create a movie
 
 export const postMovie = async (req, res) => {
-  const movieData = req.body;
+  // const movieData = req.body;
+  const { title, director, releaseYear, genre } = req.body;
+
+  if (!title || !director || !releaseYear || !genre) {
+    return res.status(400).json({
+      message:
+        "your body need to include title, director,releaseYear and genre",
+      success: false,
+    });
+  }
+  const movieData = {
+    title,
+    director,
+    releaseYear,
+    genre,
+  };
 
   try {
     const insertMovie = await insertMovieDb(movieData);
