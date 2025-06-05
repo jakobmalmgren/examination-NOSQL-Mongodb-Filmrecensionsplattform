@@ -42,7 +42,9 @@ export const insertReviewToDb = async (review) => {
 // get review func
 export const getReviewInDb = async () => {
   try {
-    const reviews = await Review.find();
+    const reviews = await Review.find()
+      .populate("movieId", "title -_id")
+      .populate("userId", "username -_id");
     return reviews;
   } catch (error) {
     console.error(error);

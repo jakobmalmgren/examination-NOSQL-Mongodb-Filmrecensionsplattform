@@ -30,7 +30,6 @@ export const insertUserToDb = async (userBody) => {
 export const findEmailInDb = async (email) => {
   try {
     const foundUser = await User.findOne({ email: email });
-    console.log("FOUNDUSER:", foundUser);
 
     return foundUser;
   } catch (error) {
@@ -43,7 +42,6 @@ export const findEmailInDb = async (email) => {
 export const findUsernameInDb = async (username) => {
   try {
     const foundUser = await User.findOne({ username: username });
-    console.log("FOUNDUSER:", foundUser);
 
     return foundUser;
   } catch (error) {

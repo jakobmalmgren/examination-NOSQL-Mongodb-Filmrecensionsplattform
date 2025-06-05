@@ -12,14 +12,14 @@ export const createUser = async (req, res) => {
     const foundUser = await findEmailInDb(email);
     if (foundUser !== null) {
       return res.status(400).json({
-        message: "finns redan en användare med den mejladressen",
+        message: "A user with that email address already exists.",
         success: false,
       });
     }
     const foundUsername = await findUsernameInDb(username);
     if (foundUsername !== null) {
       return res.status(400).json({
-        message: "finns redan en användare med det usernamet",
+        message: "A user with that username already exists.",
         success: false,
       });
     }
@@ -32,7 +32,7 @@ export const createUser = async (req, res) => {
     };
     const insertedUser = await insertUserToDb(newUser);
     return res.status(200).json({
-      message: "user skapad succesfully",
+      message: "user created succesfully",
       success: true,
       data: {
         name: insertedUser.username,
@@ -42,7 +42,7 @@ export const createUser = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE skapa user",
+      message: "You failed to create a user.",
       success: false,
       errorMessage: error.message,
     });
@@ -54,7 +54,7 @@ export const logInUser = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(404).json({
-      message: "username och password krävs i bodyn!",
+      message: "Username and password are required in the body!",
       success: false,
     });
   }
@@ -65,7 +65,7 @@ export const logInUser = async (req, res) => {
 
     if (foundUsername === null) {
       return res.status(401).json({
-        message: "fel användarnamn eller lösenord",
+        message: "Incorrect username or password.",
         success: false,
       });
     }
@@ -77,7 +77,7 @@ export const logInUser = async (req, res) => {
     // i dont want to give to much info to the client
     if (!checkIfPasswordMatch) {
       return res.status(401).json({
-        message: "fel användarnamn eller lösenord",
+        message: "Incorrect username or password.",
         success: false,
       });
     }
@@ -92,13 +92,13 @@ export const logInUser = async (req, res) => {
       { expiresIn: "2h" }
     );
     res.status(200).json({
-      message: "inloggningen lyckad!",
+      message: "Login successful!",
       success: true,
       token: token,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE logga in",
+      message: "You failed to log in.",
       success: false,
       errorMessage: error.message,
     });

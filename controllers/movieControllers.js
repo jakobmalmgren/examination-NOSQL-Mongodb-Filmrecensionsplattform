@@ -17,13 +17,13 @@ export const postMovie = async (req, res) => {
   try {
     const insertMovie = await insertMovieDb(movieData);
     return res.status(201).json({
-      message: "du lyckades lägga till en ny film",
+      message: "You successfully added a new movie.",
       success: true,
       data: insertMovie,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE lägga till en ny film",
+      message: "You failed to add a new movie.",
       success: false,
       errorMessage: error.message,
     });
@@ -36,13 +36,13 @@ export const getAllMovies = async (req, res) => {
   try {
     const allMovies = await getAllMoviesFromDb();
     return res.status(200).json({
-      message: "du lyckades hämta alla filmer",
+      message: "You successfully retrieved all movies",
       success: true,
       data: allMovies,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE hämta alla filmer",
+      message: "You failed to retrieve all movies.",
       success: false,
       errorMessage: error.message,
     });
@@ -55,13 +55,13 @@ export const getMovieByID = async (req, res) => {
 
   if (!id) {
     return res.status(400).json({
-      message: "ID i URL params är required",
+      message: "ID in URL params is required",
     });
   }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
-      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      message: "Invalid ID format, not a MongoDB ObjectId.",
       success: false,
     });
   }
@@ -70,17 +70,17 @@ export const getMovieByID = async (req, res) => {
     const movie = await getMovieByIdFromDb(id);
     if (movie === null) {
       return res.status(404).json({
-        message: "ID:t finns inte",
+        message: "the ID doesnt excist",
       });
     }
     return res.status(200).json({
-      message: "du lyckades hämta filmen med specifikt ID",
+      message: "You successfully retrieved the movie with the specified ID.",
       success: true,
       data: movie,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE hämta filmen med specifikt ID",
+      message: "You failed to retrieve the movie with the specified ID.",
       success: false,
       errorMessage: error.message,
     });
@@ -93,13 +93,13 @@ export const updateMovieByID = async (req, res) => {
 
   if (!id) {
     return res.status(400).json({
-      message: "ID i URL params är required",
+      message: "ID in URL params is required",
     });
   }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
-      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      message: "Invalid ID format, not a MongoDB ObjectId.",
       success: false,
     });
   }
@@ -107,7 +107,8 @@ export const updateMovieByID = async (req, res) => {
 
   if (!title || !director || !releaseYear || !genre) {
     return res.status(404).json({
-      message: "title, director, releaseYear och genre måste ingå i bodyn",
+      message:
+        "title, director, releaseYear and genre have to be included in the body",
       success: false,
     });
   }
@@ -120,13 +121,13 @@ export const updateMovieByID = async (req, res) => {
       });
     }
     return res.status(200).json({
-      message: "du lyckades uppdatera filmen med specifikt ID",
+      message: "You successfully updated the movie with the specified ID.",
       success: true,
       data: updatedMovie,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE uppdatera filmen med specifikt ID",
+      message: "You failed to update the movie with the specified ID.",
       success: false,
       errorMessage: error.message,
     });
@@ -139,13 +140,13 @@ export const deleteMovieByID = async (req, res) => {
 
   if (!id) {
     return res.status(400).json({
-      message: "ID i URL params är required",
+      message: "ID in URL params is required",
     });
   }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
-      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      message: "Invalid ID format, not a MongoDB ObjectId.",
       success: false,
     });
   }
@@ -154,18 +155,18 @@ export const deleteMovieByID = async (req, res) => {
     const deletedMovie = await deleteMovieByIdFromDb(id);
     if (deletedMovie === null) {
       return res.status(404).json({
-        message: "ID:t finns inte",
+        message: "the ID doesnt excist",
       });
     }
 
     return res.status(200).json({
-      message: "du lyckades deleta filmen med specifikt ID",
+      message: "You successfully deleted the movie with the specified ID.",
       success: true,
       deletedData: deletedMovie,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE deleta filmen med specifikt ID",
+      message: "You failed to delete the movie with the specified ID.",
       success: false,
       errorMessage: error.message,
     });
@@ -178,13 +179,13 @@ export const getAllReviewsFromMovie = async (req, res) => {
 
   if (!id) {
     return res.status(400).json({
-      message: "ID i URL params är required",
+      message: "ID in URL params is required",
     });
   }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
-      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      message: "Invalid ID format, not a MongoDB ObjectId.",
       success: false,
     });
   }
@@ -194,18 +195,18 @@ export const getAllReviewsFromMovie = async (req, res) => {
 
     if (allReviewsFromMovie.length === 0) {
       return res.status(404).json({
-        message: "ID:t finns inte eller har filmen inga reviews",
+        message: "The ID does not exist or the movie has no reviews.",
       });
     }
 
     return res.status(200).json({
-      message: "hämtningen av reviews för specifik film lyckades",
+      message: "Fetching reviews for the specified movie was successful.",
       success: true,
       Data: allReviewsFromMovie,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "hämtningen av reviews för specifik film lyckades INTE",
+      message: "Fetching reviews for the specified movie failed.",
       success: false,
       errorMessage: error.message,
     });
@@ -218,20 +219,18 @@ export const getAllMoviesAndRatings = async (req, res) => {
 
     if (aggregatedData.length === 0) {
       return res.status(404).json({
-        message: "det finns inga recensioner att ta del av!",
+        message: "There are no reviews available!",
       });
     }
 
     return res.status(200).json({
-      message:
-        "hämtningen av alla filmer och deras genomsnittliga betyg lyckades!",
+      message: "Fetching all movies and their average ratings was successful!",
       success: true,
       Data: aggregatedData,
     });
   } catch (error) {
     return res.status(500).json({
-      message:
-        "hämtningen av alla filmer och deras genomsnittliga betyg lyckades INTE",
+      message: "Fetching all movies and their average ratings failed.",
       success: false,
       errorMessage: error.message,
     });

@@ -15,9 +15,9 @@ const PORT = process.env.PORT || 4000;
 const connectDb = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log("ansluten till mongoDB");
+    console.log("Connected to MongoDB");
   } catch (error) {
-    console.log("gick inte ansluta till mongoDB", error.message);
+    console.log("Failed to connect to MongoDB", error.message);
     process.exit(1);
   }
 };
@@ -31,5 +31,5 @@ app.use("/api/reviews", checkAuthentication, reviewRoutes);
 
 // trigger the server
 app.listen(PORT, () => {
-  console.log(`servern är igång på http://localhost:${PORT}`);
+  console.log(`The server is running on http://localhost:${PORT}`);
 });

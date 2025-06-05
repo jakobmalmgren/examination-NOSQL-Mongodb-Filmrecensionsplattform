@@ -4,7 +4,7 @@ export const checkAuthorization = (req, res, next) => {
   try {
     if (req.role !== "admin") {
       return res.status(403).json({
-        message: "du är inte admin så du har inte access till detta!",
+        message: "You are not an admin, so you do not have access to this!",
         success: false,
       });
     }
@@ -12,7 +12,7 @@ export const checkAuthorization = (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Ett serverfel uppstod.",
+      message: "A server error occurred.",
       errorMessage: error.message,
     });
   }

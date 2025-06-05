@@ -11,27 +11,27 @@ import mongoose from "mongoose";
 export const postReview = async (req, res) => {
   try {
     // this check is not neccesary but I do it for better API design
-    if (
-      !req.body.movieId ||
-      !req.body.userId ||
-      !req.body.ratings ||
-      !req.body.comment
-    ) {
+    if (!req.body.movieId || !req.body.ratings || !req.body.comment) {
       return res.status(400).json({
         success: false,
-        message:
-          "Alla fält (movieId, userId, ratings, comment) måste vara med.",
+        message: "movieId, ratings, comment must be included.",
       });
     }
-    const insertedReview = await insertReviewToDb(req.body);
+    const reviewObj = {
+      movieId: req.body.movieId,
+      userId: req.id,
+      ratings: req.body.ratings,
+      comment: req.body.comment,
+    };
+    const insertedReview = await insertReviewToDb(reviewObj);
     return res.status(200).json({
-      message: "review skapad succesfully",
+      message: "review succesfully created",
       success: true,
       data: insertedReview,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE skapa review",
+      message: "You failed to create the review.",
       success: false,
       errorMessage: error.message,
     });
@@ -43,13 +43,13 @@ export const getReviews = async (req, res) => {
   try {
     const reviews = await getReviewInDb();
     return res.status(200).json({
-      message: "reviews hämtades succesfully",
+      message: "Reviews were fetched successfully.",
       success: true,
       data: reviews,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE hämta reviews",
+      message: "You failed to fetch the reviews.",
       success: false,
       errorMessage: error.message,
     });
@@ -61,13 +61,13 @@ export const getReviewsById = async (req, res) => {
   const { id } = req.params;
   if (!id) {
     return res.status(404).json({
-      message: "id saknas i params i URL",
+      message: "id is missing in params, URL",
       success: false,
     });
   }
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
-      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      message: "Invalid ID format, not a MongoDB ObjectId.",
       success: false,
     });
   }
@@ -77,19 +77,19 @@ export const getReviewsById = async (req, res) => {
 
     if (reviewsById === null) {
       return res.status(404).json({
-        message: "id:t finns inte som du anger i params URL",
+        message: "The ID you provided in the URL params does not exist.",
         succes: false,
       });
     }
 
     return res.status(200).json({
-      message: "reviews med specifikt ID hämtades succesfully",
+      message: "Reviews with the specified ID were fetched successfully.",
       success: true,
       data: reviewsById,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE hämta reviews med specifikt ID",
+      message: "You failed to fetch reviews with the specified ID.",
       success: false,
       errorMessage: error.message,
     });
@@ -101,13 +101,13 @@ export const deleteReviewsById = async (req, res) => {
   const { id } = req.params;
   if (!id) {
     return res.status(404).json({
-      message: "id saknas i params i URL",
+      message: "id is missing in params, URL",
       success: false,
     });
   }
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
-      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      message: "Invalid ID format, not a MongoDB ObjectId.",
       success: false,
     });
   }
@@ -117,19 +117,19 @@ export const deleteReviewsById = async (req, res) => {
 
     if (deletedReviews === null) {
       return res.status(404).json({
-        message: "id:t finns inte som du anger i params URL",
+        message: "The ID you provided in the URL parameters does not exist.",
         succes: false,
       });
     }
 
     return res.status(200).json({
-      message: "reviews med specifikt ID raderades succesfully",
+      message: "Reviews with the specified ID were deleted successfully.",
       success: true,
       deletedData: deletedReviews,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE radera reviews med specifikt ID",
+      message: "You failed to delete reviews with the specified ID.",
       success: false,
       errorMessage: error.message,
     });
@@ -143,18 +143,18 @@ export const updateReviewById = async (req, res) => {
 
   if (!ratings || !comment) {
     return res.status(404).json({
-      message: "ratings eller comment måste finnas för uppdatering ",
+      message: "Either ratings or comment must be provided for update.",
     });
   }
   if (!id) {
     return res.status(404).json({
-      message: "id saknas i params i URL",
+      message: "id is missing in params, URL",
       success: false,
     });
   }
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
-      message: "Ogiltigt ID-format, inte ett MongoDB ObjectId",
+      message: "Invalid ID format, not a MongoDB ObjectId.",
       success: false,
     });
   }
@@ -164,19 +164,19 @@ export const updateReviewById = async (req, res) => {
 
     if (updatedReview === null) {
       return res.status(404).json({
-        message: "id:t finns inte som du anger i params URL",
+        message: "The ID you provided in the URL parameters does not exist.",
         succes: false,
       });
     }
 
     return res.status(200).json({
-      message: "reviews med specifikt ID updaterades succesfully",
+      message: "Reviews with the specified ID were updated successfully.",
       success: true,
       updatedData: updatedReview,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "du lyckades INTE uppdatera reviews med specifikt ID",
+      message: "You failed to update reviews with the specified ID.",
       success: false,
       errorMessage: error.message,
     });
